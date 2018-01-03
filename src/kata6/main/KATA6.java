@@ -11,32 +11,25 @@ import kata6.view.MailListReader;
 
 public class KATA6 {
     public static void main(String[] args) throws IOException{
-        KATA6 histo= new KATA6();
-        histo.execute();
-    }
-    
-    private String filename;
-    private List<Mail> mailList;
-    private Histogram<String> histogram;
-    private static HistogramDisplay histoDisplay;
-    
-    private void execute() throws IOException{
-        input();
-        process();
-        output();
-        
-    }
-    
-    private void input() throws IOException{
-        filename="C:\\Users\\DaniCerv\\Desktop\\KATA4\\emails.txt";
-        mailList= MailListReader.read(filename);
-    }
-    
-    private void process(){
-        histogram=MailHistogramBuilder.build(mailList);
-    }
-    private void output(){
-        histoDisplay = new HistogramDisplay(histogram);
-        histoDisplay.execute();
+        String filename="emails.txt";
+        List<Mail> mailList=MailListReader.read(filename);
+        MailHistogramBuilder<Mail> builder= new MailHistogramBuilder<>(mailList);
+        Histogram<String> domains=builder.build(new Attribute<Mail,String>(){
+            @Override
+            public String get(Mail item){
+                return item.getMail().split("@")[1];
+            }
+         
+        });
+        new HistogramDisplay(domains,"Dominios").execute();
+         
+        Histogram<Character> letters=builder.build(new Attribute<Mail,Character>(){
+            @Override
+             public Character get(Mail item){
+                 return item.getMail().charAt(0);
+             }
+        });
+         
+        new HistogramDisplay(letters,"Primer Caracter").execute();
     }
 }

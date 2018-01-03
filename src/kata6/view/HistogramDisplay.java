@@ -1,22 +1,24 @@
 package kata6.view;
 
-import java.awt.Dimension;
-import javax.swing.JPanel;
-import kata6.model.Histogram;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
+import javax.swing.*;
+import java.awt.*;
+import kata6.model.Histogram;
 
-public class HistogramDisplay extends ApplicationFrame {
+public class HistogramDisplay<T> extends ApplicationFrame {
     
-    private final Histogram<String> histogram;
+    private final Histogram<T> histogram;
+    private final String nameEjex;
     
-    public HistogramDisplay(Histogram<String> histogram){
-        super("JFreeChart Histogram");
+    public HistogramDisplay(Histogram<T> histogram,String nameEjex){
+        super("HISTOGRAM");
         this.histogram=histogram;
+        this.nameEjex=nameEjex;
         setContentPane(createPanel());
         pack();
     }
@@ -34,7 +36,7 @@ public class HistogramDisplay extends ApplicationFrame {
     private JFreeChart createChart (DefaultCategoryDataset dataset){
         JFreeChart chart= ChartFactory.createBarChart(
                         "JFreeChart Histogram",
-                        "Dominios emails",
+                        nameEjex,
                         "Nº de emails",
                         dataset,
                         PlotOrientation.VERTICAL,
@@ -47,8 +49,8 @@ public class HistogramDisplay extends ApplicationFrame {
     
     private DefaultCategoryDataset createDataset(){
         DefaultCategoryDataset dataset= new DefaultCategoryDataset();
-        for(String key: histogram.keySet()){
-            dataset.addValue(histogram.get(key),"",key);
+        for(T key: histogram.keySet()){
+            dataset.addValue(histogram.get(key),"",(Comparable)key);
         }
         return dataset;
     }
